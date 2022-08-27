@@ -10,8 +10,10 @@ class Genre extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'name'
     ];
+
+    public function writing(){
+        return $this->belongsToMany(Writing::class);
+    }
 }

@@ -14,7 +14,22 @@
                         </div>
                     @endif
 
-                    {{ __('Latest writings here') }}
+                    @foreach ($posts as $post)
+                        <div class="pb-3">
+                            <div>
+                                <b>{{$post->writing->name}}</b>
+                            </div>
+
+                            <div>
+                                "{{$post->title}}"
+                            </div>
+
+                            <div>
+                                {{$post->content}}
+                            </div>
+                            
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
