@@ -18,4 +18,11 @@ class Post extends Model
     public function writing(){
         return $this->belongsTo(Writing::class);
     }
+
+    protected static function booted()
+    {
+        static::created(function ($post) {
+            $post->writing()->update([]);
+        });
+    }
 }

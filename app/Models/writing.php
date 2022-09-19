@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Filters\WritingFilter;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,5 +28,10 @@ class Writing extends Model
 
     public function genre(){
         return $this->hasOne(Genre::class);
+    }
+
+    public function scopeFilter(Builder $builder, $request)
+    {   
+        return (new WritingFilter($request))->filter($builder);
     }
 }

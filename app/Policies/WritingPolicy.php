@@ -30,7 +30,12 @@ class WritingPolicy
      */
     public function view(User $user, Writing $writing)
     {
-        //
+        return (
+            $writing->user_id = $user->id
+            ||
+            !$writing->private
+            
+        );
     }
 
     /**

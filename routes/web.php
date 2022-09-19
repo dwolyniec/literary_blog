@@ -17,17 +17,26 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get('/', [App\Http\Controllers\PostController::class, 'index'])->name('home');
-Route::get('/my', [App\Http\Controllers\WritingController::class, 'my'])->name('my_writings');
-Route::get('/writings/create', [App\Http\Controllers\WritingController::class, 'create'])->name('writing.create');
-Route::post('/writings/store', [App\Http\Controllers\WritingController::class, 'store'])->name('writing.store');
-Route::patch('/writings/update/{writing}', [App\Http\Controllers\WritingController::class, 'update'])->name('writing.update');
+Route::get('/', [App\Http\Controllers\WritingController::class, 'index'])->name('home');
 
-Route::get('/writings/{writing}', [App\Http\Controllers\WritingController::class, 'show'])->name('writing.show');
-Route::get('/writings/edit/{writing}', [App\Http\Controllers\WritingController::class, 'edit'])->name('writing.edit');
+Route::post('/', [App\Http\Controllers\WritingController::class, 'filter']);
+
+Route::get('/writing/{writing}', [App\Http\Controllers\WritingController::class, 'show'])->name('writing.show');
 
 //POSTS
-Route::get('/posts/create', [App\Http\Controllers\PostController::class, 'create'])->name('post.create');
-Route::get('/posts/{post}', [App\Http\Controllers\PostController::class, 'show'])->name('post.show');
-Route::post('/posts/store', [App\Http\Controllers\PostController::class, 'store'])->name('post.store');
+Route::get('/post/{post}', [App\Http\Controllers\PostController::class, 'show'])->name('post.show');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/my', [App\Http\Controllers\WritingController::class, 'my'])->name('my_writings');
+
+    Route::get('/post/create/{writing}', [App\Http\Controllers\PostController::class, 'create'])->name('post.create');
+    Route::post('/post', [App\Http\Controllers\PostController::class, 'store'])->name('post.store');
+    Route::get('/post/edit/{post}', [App\Http\Controllers\PostController::class, 'edit'])->name('post.edit');
+    Route::patch('/post/update/{post}', [App\Http\Controllers\PostController::class, 'update'])->name('post.update');
+    
+    Route::get('/writing/create', [App\Http\Controllers\WritingController::class, 'create'])->name('writing.create');
+    Route::post('/writing', [App\Http\Controllers\WritingController::class, 'store'])->name('writing.store');
+    Route::patch('/writing/update/{writing}', [App\Http\Controllers\WritingController::class, 'update'])->name('writing.update');
+    Route::get('/writing/edit/{writing}', [App\Http\Controllers\WritingController::class, 'edit'])->name('writing.edit');
+
+});

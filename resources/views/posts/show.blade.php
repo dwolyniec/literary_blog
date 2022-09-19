@@ -14,9 +14,6 @@
         
 
         <div class="col-md-10">
-            <a class="btn btn-sedondary my-3 float-end" href="{{route('post.create')}}">{{ __('Add post') }}</a>
-        </div>
-        <div class="col-md-10">
 
             @if (session('status'))
                 <div class="alert alert-success" role="alert">
@@ -26,25 +23,24 @@
 
             <div class="card">
                 <div class="card-header">
-                    <b>{{ $writing->name }}</b>
-                    <div class="">
-                        Genre: {{ $genre->name }}
-                    </div>
+                    <a href="{{route('writing.show',['writing' => $post->writing->id])}}"><b>{{$post->writing->name}}</b></a>
+
+                    @can('update', $post)
+                        <a class="p-3" href="{{route('post.edit',['post' => $post->id])}}">Edit</a>
+                    @endcan
                 </div>
 
                 <div class="card-body">
                    
-                    @foreach ($writing->posts as $post)
-                        <div class="mb-2">
-                            <a href="{{route('post.show',['post' => $post->id])}}">
-                                "{{$post->title}}"
-                            </a>
-                        </div>
+                    <div class="mb-2">
+                        
+                            "{{$post->title}}"
+                       
+                    </div>
 
-                        <div class="mb-4">
-                            {{$post->content}}
-                        </div>
-                    @endforeach
+                    <div class="mb-4">
+                        {!! $post->content !!}
+                    </div>
                    
                 </div>
             </div>

@@ -45,4 +45,8 @@ class User extends Authenticatable
     public function writings(){
         return $this->hasMany(Writing::class);
     }
+
+    public function post(){
+        return $this->hasManyThrough(Post::class, Writing::class);
+    }
 }

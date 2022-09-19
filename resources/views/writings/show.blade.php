@@ -12,10 +12,11 @@
             </div>
         @endif
         
-
-        <div class="col-md-10">
-            <a class="btn btn-sedondary my-3 float-end" href="{{route('post.create')}}">{{ __('Add post') }}</a>
-        </div>
+        @can('update', $writing)
+            <div class="col-md-10">
+                <a class="btn btn-sedondary my-3 float-end" href="{{route('post.create',[$writing->id])}}">{{ __('Add post') }}</a>
+            </div>
+        @endcan
         <div class="col-md-10">
 
             @if (session('status'))
@@ -27,7 +28,13 @@
             <div class="card">
                 <div class="card-header">
                     <b >{{ $writing->name }}</b>
-                    <a class="p-3" href="{{route('writing.edit',['writing' => $writing->id])}}">Edit</a>
+                    @can('update', $writing)
+                        <a class="p-3" href="{{route('writing.edit',['writing' => $writing->id])}}">Edit</a>
+                    @endcan
+
+                    @cannot('update', $writing)
+                        by {{ $writing->user->name }}
+                    @endcannot('update', $writing)
 
                     <div class="">
                         Genre: {{ $genre->name }}
@@ -44,7 +51,12 @@
                         </div>
 
                         <div class="mb-4">
-                            {{$post->content}}
+                            @if(strlen($post->content) > 3000)
+                                {!! substr($post->content, 0, 3000). '[...]' !!}
+                            @else
+                                {!! $post->content !!}
+                            @endif
+                            
                         </div>
                     @endforeach
                    
