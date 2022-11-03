@@ -6,7 +6,9 @@ use App\Models\Genre;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Writing;
+use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WritingController extends Controller
 {
@@ -17,7 +19,7 @@ class WritingController extends Controller
      */
     public function __construct()
     {
-        //
+        
     }
 
     /**
@@ -27,7 +29,18 @@ class WritingController extends Controller
      */
     public function index(Request $request)
     {   
-        $writings = Writing::filter($request)->has('posts')->latest()->paginate(25);
+        $writings = Writing::filter($request)->has('posts')
+            ->latest()
+            ->paginate(25);
+       
+        //filter private writings that authenticated user cant view
+        $writings = $writings->filter(function ($writing, $key) {
+            if($writing->private == 0)
+            return true;
+            
+            return (Auth::user() ? Auth::user()->can('view',$writing) : false);
+        });
+        
         $genres = Genre::orderBy('name')->get();
         $authors = User::has('writings')->orderBy('name')->get();
         $action = route('home');
@@ -57,8 +70,9 @@ class WritingController extends Controller
         $action_name = 'Create new writing';
         $action = route('writing.store');
         $genres = Genre::orderBy('name')->get();
+        $readers = User::orderBy('name')->get();
         $writing = new Writing;
-        return view('writings.create',compact('genres', 'writing', 'action', 'action_name'));
+        return view('writings.create',compact('genres', 'writing', 'action', 'action_name','readers'));
     }
 
     public function edit(\App\Models\Writing $writing)
@@ -69,7 +83,8 @@ class WritingController extends Controller
         $action_name = 'Update writing';
         $action = route('writing.update',[$writing->id]);
         $genres = Genre::orderBy('name')->get();
-        return view('writings.create',compact('genres','writing', 'action', 'action_name'));
+        $readers = User::orderBy('name')->get();
+        return view('writings.create',compact('genres','writing', 'action', 'action_name','readers'));
     }
 
     public function show(\App\Models\Writing $writing)
@@ -81,14 +96,16 @@ class WritingController extends Controller
 
     public function store()
     {   
-        $this->middleware('auth');
-
         $data = request()->validate([
             'name' =>'required|max:255',
-            'genre_id' =>['integer', 'required'],
-            'private' =>'integer'
+            'genre_id' =>'integer|required',
+            'private' =>'integer',
+            'readers' => 'array',
+            'readers.*' => 'integer|exists:users,id',
         ]);
-        auth()->user()->writings()->create($data);
+
+        $new_writing = auth()->user()->writings()->create($data);
+        $new_writing->readers()->toggle($data['readers']);
 
         return redirect(url('/my'))->with('success', 'New writing created'); 
     }
@@ -100,13 +117,19 @@ class WritingController extends Controller
         $data = request()->validate([
             'name' =>'required|max:255',
             'genre_id' =>['integer', 'required'],
-            'private' =>'integer'
+            'private' =>'integer',
+            'readers' => 'array',
+            'readers.*' => 'integer|exists:users,id',
         ]);
         
         $writing->update($data);
-
+        $writing->readers()->sync($data['readers']);
 
         return redirect(url('/my'))->with('success', $writing->name.' updated'); 
     }
 
+    public function rate(\App\Models\Writing $writing)
+    {
+        dd($_POST, $writing);
+    }
 }

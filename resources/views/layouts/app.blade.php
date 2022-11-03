@@ -7,14 +7,18 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{__('Literary board')}}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
+    
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 </head>
 <body>
     <div id="app">
@@ -23,7 +27,7 @@
                 
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="{{ url('/') }}/bookshelf.jpg" alt="" style="width:8%; margin-right:1rem">
-                     {{ config('app.name', 'Laravel') }}
+                    {{__('Literary board')}}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -52,7 +56,7 @@
                             @endif
                         @else
                             <li class="nav-item">
-                                <a class="dropdown-item nav-link" href="{{ route('my_writings') }} "> My writings </a>
+                                <a class="dropdown-item nav-link" href="{{ route('my_writings') }} "> {{ __('My writings') }} </a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

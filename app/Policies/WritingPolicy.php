@@ -29,12 +29,14 @@ class WritingPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, Writing $writing)
-    {
+    {   
+        //return false;
         return (
-            $writing->user_id = $user->id
+            $writing->user_id == $user->id
             ||
             !$writing->private
-            
+            || 
+            in_array($user->id, $writing->readers()->pluck('users.id')->all())  
         );
     }
 

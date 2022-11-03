@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use AbdullahFaqeir\LaravelRating\Traits\Rate\Rateable;
 use App\Filters\WritingFilter;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Writing extends Model
 {
-    use HasFactory;
+    use HasFactory, Rateable;
 
     protected $fillable = [
         'name',
@@ -28,6 +29,10 @@ class Writing extends Model
 
     public function genre(){
         return $this->hasOne(Genre::class);
+    }
+
+    public function readers(){
+        return $this->belongsToMany(User::class);
     }
 
     public function scopeFilter(Builder $builder, $request)

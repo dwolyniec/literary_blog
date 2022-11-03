@@ -82,7 +82,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'pl',
 
     /*
     |--------------------------------------------------------------------------
@@ -181,7 +181,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
+        
         /*
          * Package Service Providers...
          */
@@ -194,7 +194,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        AbdullahFaqeir\LaravelRating\LaravelRatingServiceProvider::class
     ],
 
     /*
@@ -209,7 +209,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // 'ExampleClass' => App\Example\ExampleClass::class,
+        "LaravelRating" => \AbdullahFaqeir\LaravelRating\LaravelRatingFacade::class,
     ])->toArray(),
 
 ];

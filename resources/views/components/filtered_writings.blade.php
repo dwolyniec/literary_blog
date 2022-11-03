@@ -3,14 +3,14 @@
 
     <div  class="card-body">
         @if(!$writings->isNotEmpty())
-            No writings to display
+            {{__('No writings to display')}}
         @else
             @foreach ($writings as $writing)
                 <div class="pb-3">
                     <div>
                         <a href="{{route('writing.show',['writing' => $writing->id])}}"><b>{{ strtoupper($writing->name) }}</b></a>
                         @cannot('update', $writing)
-                            by {{ $writing->user->name }}
+                            {{__('by')}} {{ $writing->user->name }}
                         @endcannot('update', $writing)
     
                     </div>

@@ -34,7 +34,7 @@
                             </div>
 
                             <div>
-                                Posts: {{$writing->posts()->count()}}
+                                {{ __('Posts') }}: {{$writing->posts()->count()}}
                             </div>
 
                             

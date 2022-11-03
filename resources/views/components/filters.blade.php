@@ -25,7 +25,7 @@
                 class="form-control @error('genre_id') is-invalid @enderror" 
                 name="genre_id" value="{{ old('genre_id') }}" 
                 autocomplete="genre_id">
-                <option value="" style="color:gray">Choose genre...</option>
+                <option value="" style="color:gray">{{ __('Choose') }}...</option>
                 @foreach ($genres as $genre)
                     <option value="{{$genre->id}}"
                       @if ($genre->id == old('genre_id') )
@@ -49,7 +49,7 @@
                 class="form-control @error('author') is-invalid @enderror" 
                 name="author" value="{{ old('author') }}" 
                 autocomplete="author">
-                <option value="" style="color:gray">Choose author...</option>
+                <option value="" style="color:gray">{{ __('Choose') }}...</option>
                 @foreach ($authors as $author)
                     <option value="{{$author->id}}"
                       @if ($author->id == old('author') )
@@ -82,7 +82,7 @@
         </div>
     </div>
     <div class="form-row">
-        <button type="button" onclick="filter()" class="btn btn-secondary">Search</button>
+        <button type="button" onclick="filter()" class="btn btn-secondary">{{__('Search')}}</button>
     </div>
 
 </form>

@@ -18,16 +18,13 @@ class PostController extends Controller
 
     public function show(\App\Models\Post $post)
     {   
-        //$genre = \App\Models\Genre::where('id',$writing->genre_id)->first();
-       //dd($genre);
         return view('posts.show',compact('post'));
     }
 
     public function create(Writing $writing)
     {   
         $action_name = 'Create new post';
-        $action = route('post.store');
-       
+        $action = route('posts.store');
         $post = new Post();
         return view('posts.create',compact('post', 'action', 'action_name', 'writing'));
     }
@@ -62,7 +59,6 @@ class PostController extends Controller
         ]);
         
         $post->update($data);
-
 
         return redirect(url('/my'))->with('success', $post->title.' updated'); 
     }
