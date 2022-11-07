@@ -43,23 +43,29 @@
                         {{__('Genre')}}: {{ $genre->name }}
                     </div>
                 </div>
-                <form action=" {{ route('writing.rate', $writing) }}" method="POST">
+                <form action="" method="POST">
                     @csrf
                     
                     <div class="wrapper float-end" style="left: 0%">
-                        <input name="ratingRadio" type="radio" id="st1" value="1" />
-                        <label for="st1"></label>
-                        <input name="ratingRadio" type="radio" id="st2" value="2" />
-                        <label for="st2"></label>
-                        <input name="ratingRadio" type="radio" id="st3" value="3" />
-                        <label for="st3"></label>
-                        <input name="ratingRadio" type="radio" id="st4" value="4" />
-                        <label for="st4"></label>
                         <input name="ratingRadio" type="radio" id="st5" value="5" />
                         <label for="st5"></label>
+                        <input name="ratingRadio" type="radio" id="st4" value="4" />
+                        <label for="st4"></label>
+                        <input name="ratingRadio" type="radio" id="st3" value="3" />
+                        <label for="st3"></label>
+                        <input name="ratingRadio" type="radio" id="st2" value="2" />
+                        <label for="st2"></label>
+                        <input name="ratingRadio" type="radio" id="st1" value="1" />
+                        <label for="st1"></label>
                     </div>
                 </form>
-                
+                <div class="float-end" style="text-align:end; margin-top: -3rem; margin-right: 5rem;">
+                    @if($ratings_count)
+                        {{ __('Average')}} <span id="average_rating">{{$average_rating ?? '-'}}</span>/5 of {{ $ratings_count }} ratings
+                    @else
+                        {{ __('No ratings')}}
+                    @endif
+                </div>
                   
                 <div class="card-body">
                    
@@ -89,10 +95,38 @@
 </div>
 
 <script>
-
-$("[name='ratingRadio']").on('click', function(){
-    $("form").submit();
+$(document).ready(function(){
+    var user_rating = {!! json_encode($user_rating) !!} ;
+    var average_rating = Math.round({{ $average_rating }}) ;
+    if(!isNaN(user_rating) && user_rating != null){
+        $('#st'+user_rating).prop("checked", true);
+    }
+    else if(!isNaN(average_rating)){
+        $('#st'+average_rating).prop("checked", true);
+    }
 })
+
+$("[name='ratingRadio']").on('click', function(e) {
+    @guest
+        e.preventDefault(); 
+        alert(" {{__('Need to be logged to rate')}} ");
+        return
+    @endguest
+        e.preventDefault(); 
+        var _token = $('meta[name="csrf-token"]').attr('content');
+        var value = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: '{{ route('writing.rate', $writing) }}',
+            data: {_token:_token, value:value},
+            success: function( average_rating ) {
+                if(average_rating != $("#average_rating").html()){
+                    $("#average_rating").html(average_rating);
+                    $('#st'+value).prop("checked", true)
+               }
+           }
+       });
+   });
 
 </script>
 

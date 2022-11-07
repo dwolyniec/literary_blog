@@ -90,8 +90,10 @@ class WritingController extends Controller
     public function show(\App\Models\Writing $writing)
     {   
         $genre = \App\Models\Genre::where('id',$writing->genre_id)->first();
-
-        return view('writings.show',compact('writing', 'genre'));
+        $average_rating = $writing->ratings->avg('value');
+        $user_rating = auth()->user() ? auth()->user()->getRatingValue($writing) : null;
+        $ratings_count = $writing->ratingsCount();
+        return view('writings.show',compact('writing', 'genre', 'average_rating', 'user_rating','ratings_count'));
     }
 
     public function store()
@@ -127,9 +129,13 @@ class WritingController extends Controller
 
         return redirect(url('/my'))->with('success', $writing->name.' updated'); 
     }
-
+    /**
+     * Rate writing and return average rating
+     */
     public function rate(\App\Models\Writing $writing)
-    {
-        dd($_POST, $writing);
+    {   
+        auth()->user()->rate($writing, request()->value);
+
+        return round($writing->ratingsAvg(), 2);
     }
 }
